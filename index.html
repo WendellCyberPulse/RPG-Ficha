@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha Nightfall RPG</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #3a0d0d;
+            color: #fff1e6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #5c1a1a;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #ffd700;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #5a0000, #8d0000);
+            color: #ffd700;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 3px solid #ffd700;
+            text-shadow: 2px 2px 2px rgba(0,0,0,0.5);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.8em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .identity-stripe {
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                #ffd700 10px,
+                #ffd700 20px
+            );
+            height: 5px;
+            margin-top: 10px;
+        }
+
+        .section {
+            padding: 15px;
+            border-bottom: 1px solid #3a0d0d;
+        }
+
+        .photo-section {
+            position: relative;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .photo-frame {
+            width: 200px;
+            height: 250px;
+            border: 3px solid #ffd700;
+            background: #2a0a0a;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            color: #ffd700;
+            border-radius: 5px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .field-group label {
+            display: block;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #3a0d0d;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            background: #2a0a0a;
+            color: #fff1e6;
+            transition: all 0.3s ease;
+        }
+
+        input:read-only {
+            background: #3a0d0d;
+            cursor: not-allowed;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #ffd700;
+            box-shadow: 0 0 5px #ffd700;
+            outline: none;
+        }
+
+        .security-stripes {
+            background: repeating-linear-gradient(
+                -45deg,
+                #ffd70033,
+                #ffd70033 5px,
+                transparent 5px,
+                transparent 10px
+            );
+            height: 30px;
+            margin: 10px 0;
+        }
+
+        .watermark {
+            position: absolute;
+            opacity: 0.08;
+            font-size: 120px;
+            transform: rotate(-45deg);
+            pointer-events: none;
+            color: #ffd700;
+            top: 30%;
+            left: -50px;
+            white-space: nowrap;
+        }
+
+        .d20-button {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(145deg, #ffd700, #c4a500);
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+            margin: 20px;
+        }
+
+        .d20-button::before {
+            content: "20";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #2a2a2a;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.3);
+        }
+
+        .d20-button::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, 
+                transparent 48%, 
+                rgba(0,0,0,0.1) 50%, 
+                transparent 52%);
+            border-radius: 15px;
+        }
+
+        .d20-button:hover {
+            transform: rotate(15deg) scale(1.1);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.3);
+        }
+
+        .d20-button:active {
+            transform: rotate(-15deg) scale(0.95);
+            animation: roll 0.5s ease;
+        }
+
+        @keyframes roll {
+            0% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(90deg) scale(0.9); }
+            50% { transform: rotate(180deg) scale(0.85); }
+            75% { transform: rotate(270deg) scale(0.9); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        .d20-button {
+            clip-path: polygon(
+                50% 0%,
+                80% 10%,
+                100% 35%,
+                100% 70%,
+                80% 90%,
+                50% 100%,
+                20% 90%,
+                0% 70%,
+                0% 35%,
+                20% 10%
+            );
+        }
+
+        .vida-container {
+            padding: 15px;
+            background: #2a0a0a;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .barra-vida {
+            height: 25px;
+            background: #4a0000;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            border: 2px solid #ffd700;
+        }
+
+        .vida-atual {
+            height: 100%;
+            background: linear-gradient(45deg, #ff0000, #cc0000);
+            width: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .vida-texto {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        .controles-vida {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .controles-vida input {
+            background: #3a0d0d;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="watermark">NIGHTFALL</div>
+        
+        <div class="header">
+            <h1>Cartão de Identificação Nightfall</h1>
+            <div class="identity-stripe"></div>
+        </div>
+
+        <div class="photo-section">
+            <div class="photo-frame">🖼️</div>
+        </div>
+        <div class="section">
+          <h3 style="color: #ffd700; border-left: 3px solid #ffd700; padding-left: 10px;">Vitalidade</h3>
+          <div class="vida-container">
+              <div class="barra-vida">
+                  <div class="vida-atual" id="vida-barra"></div>
+                  <div class="vida-texto" id="vida-texto">100/100</div>
+              </div>
+              <div class="controles-vida">
+                  <input type="number" id="vida-max" value="100" min="0">
+                  <input type="number" id="vida-atual" value="100" min="0">
+              </div>
+          </div>
+      </div>
+        <div class="section">
+            <div class="grid-2col">
+                <div class="field-group">
+                    <label>Nome Completo</label>
+                    <input type="text" id="nome" placeholder="Ex: Kael Faradays">
+                </div>
+                <div class="field-group">
+                    <label>Classe</label>
+                    <select id="classe">
+                        <option>Humano</option>
+                        <option>Lobisomem</option>
+                        <option>Vampiro</option>
+                        <option>Backup</option>
+                        <option>Mago</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div id="subclasse-container" class="section" style="display: none;">
+            <div class="field-group">
+                <label>Subclasse</label>
+                <select id="subclasse"></select>
+            </div>
+        </div>
+
+        <div class="security-stripes"></div>
+
+        <div class="section">
+            <h3 style="color: #ffd700; border-left: 3px solid #ffd700; padding-left: 10px;">Atributos</h3>
+            <div class="grid-2col">
+                <div class="field-group">
+                    <label>Força</label>
+                    <input type="number" id="FOR" readonly>
+                </div>
+                <div class="field-group">
+                    <label>Agilidade</label>
+                    <input type="number" id="AGI" readonly>
+                </div>
+                <div class="field-group">
+                    <label>Inteligência</label>
+                    <input type="number" id="INT" readonly>
+                </div>
+                <div class="field-group">
+                    <label>Carisma</label>
+                    <input type="number" id="CAR" readonly>
+                </div>
+                <div class="field-group">
+                    <label>Precisão</label>
+                    <input type="number" id="PRE" readonly>
+                </div>
+                <div class="field-group">
+                    <label>Resistência</label>
+                    <input type="number" id="RES" readonly>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3 style="color: #ffd700; border-left: 3px solid #ffd700; padding-left: 10px;">Dados Complementares</h3>
+            <div class="field-group">
+                <label>Habilidades/Fraquezas</label>
+                <textarea id="habilidades" rows="3" readonly></textarea>
+            </div>
+            <div class="field-group">
+                <label>História e Motivação</label>
+                <textarea id="historia" rows="4" placeholder="Relate sua jornada até aqui..."></textarea>
+            </div>
+        </div>
+
+        <div class="security-stripes"></div>
+
+        <div class="section" style="text-align: center; padding: 20px;">
+            <button class="d20-button" onclick="rolarD20()"></button>
+            <div id="resultado-dado" style="margin-top: 15px; color: #ffd700; font-weight: bold;"></div>
+        </div>
+    </div>
+
+    <script>
+        const classes = {
+            humano: {
+                emoji: '👤',
+                subclasses: ['Jacobins', 'Caipora', 'Pitstop'],
+                atributos: { FOR: 7, AGI: 8, INT: 6, CAR: 8, PRE: 7, RES: 7 },
+                habilidades: {
+                    Jacobins: 'Golpes de sacrifício, Aura de fervor\nFraqueza: Fanatismo (-2 em furtividade/diplomacia)',
+                    Caipora: 'Combate à distância, Explosivos improvisados\nFraqueza: Dependência de munição',
+                    Pitstop: 'Criar/consertar veículos\nFraqueza: Ineficiente sem peças'
+                }
+            },
+            vampiro: {
+                emoji: '🧛',
+                atributos: { FOR: 8, AGI: 7, INT: 8, CAR: 9, PRE: 7, RES: 8 },
+                habilidades: 'Regeneração, Força, Controle mental\nFraqueza: Luz solar, Prata'
+            },
+            lobisomem: {
+                emoji: '🐺',
+                atributos: { FOR: 10, AGI: 9, INT: 5, CAR: 6, PRE: 6, RES: 9 },
+                habilidades: 'Força brutal, Sentidos aguçados\nFraqueza: Prata, Aconito'
+            },
+            backup: {
+                emoji: '🤖',
+                atributos: { FOR: 5, AGI: 7, INT: 10, CAR: 7, PRE: 9, RES: 6 },
+                habilidades: 'Hackear dispositivos\nFraqueza: Vulnerável a PEM'
+            },
+            mago: {
+                emoji: '🧙',
+                subclasses: ['Rio', 'Mar', 'Verdes', 'Brancos', 'Terra', 'Vermelhos'],
+                atributos: { FOR: 4, AGI: 6, INT: 10, CAR: 8, PRE: 6, RES: 6 },
+                habilidades: {
+                    Rio: 'Manipulação água doce\nFraqueza: Ambientes secos',
+                    Mar: 'Controle de marés\nFraqueza: Longe do mar',
+                    Verdes: 'Cura e plantas\nFraqueza: Áreas urbanas',
+                    Brancos: 'Tempestades\nFraqueza: Locais fechados',
+                    Terra: 'Formas animais\nFraqueza: Lentidão',
+                    Vermelhos: 'Fogo e magma\nFraqueza: Instabilidade emocional'
+                }
+            }
+        };
+
+        // Elementos DOM
+        const classeSelect = document.getElementById('classe');
+        const subclasseDiv = document.getElementById('subclasse-container');
+        const subclasseSelect = document.getElementById('subclasse');
+        const fotoFrame = document.querySelector('.photo-frame');
+        const atributos = {
+            FOR: document.getElementById('FOR'),
+            AGI: document.getElementById('AGI'),
+            INT: document.getElementById('INT'),
+            CAR: document.getElementById('CAR'),
+            PRE: document.getElementById('PRE'),
+            RES: document.getElementById('RES')
+        };
+        const habilidadesTextarea = document.getElementById('habilidades');
+        const vidaMaxInput = document.getElementById('vida-max');
+        const vidaAtualInput = document.getElementById('vida-atual');
+        const vidaBarra = document.getElementById('vida-barra');
+        const vidaTexto = document.getElementById('vida-texto');
+
+        function atualizarClasse() {
+            const classe = classeSelect.value.toLowerCase();
+            const dadosClasse = classes[classe];
+            
+            fotoFrame.textContent = dadosClasse.emoji;
+            
+            if(dadosClasse.subclasses) {
+                subclasseDiv.style.display = 'block';
+                subclasseSelect.innerHTML = dadosClasse.subclasses
+                    .map(sc => `<option>${sc}</option>`).join('');
+            } else {
+                subclasseDiv.style.display = 'none';
+            }
+            
+            Object.entries(dadosClasse.atributos).forEach(([atributo, valor]) => {
+                atributos[atributo].value = valor;
+                atributos[atributo].min = valor;
+            });
+            
+            if(typeof dadosClasse.habilidades === 'string') {
+                habilidadesTextarea.value = dadosClasse.habilidades;
+            } else {
+                habilidadesTextarea.value = dadosClasse.habilidades[subclasseSelect.value];
+            }
+            
+            salvarDados();
+        }
+
+        function atualizarVida() {
+            const max = parseInt(vidaMaxInput.value) || 0;
+            const atual = parseInt(vidaAtualInput.value) || 0;
+            const percentual = Math.min(100, (atual / max) * 100);
+            
+            vidaBarra.style.width = `${percentual}%`;
+            vidaTexto.textContent = `${atual}/${max}`;
+            salvarDados();
+        }
+
+        function aplicarDano(resultado) {
+            let dano = 0;
+            if(resultado === 1) {
+                dano = parseInt(vidaAtualInput.value);
+            } else if(resultado < 15) {
+                dano = 5;
+            }
+            
+            const novaVida = Math.max(0, parseInt(vidaAtualInput.value) - dano);
+            vidaAtualInput.value = novaVida;
+            atualizarVida();
+            
+            if(novaVida === 0) {
+                alert('💀 Você morreu!');
+            }
+        }
+
+        function salvarDados() {
+            const dados = {
+                nome: document.getElementById('nome').value,
+                classe: classeSelect.value,
+                subclasse: subclasseSelect.value,
+                atributos: {
+                    FOR: atributos.FOR.value,
+                    AGI: atributos.AGI.value,
+                    INT: atributos.INT.value,
+                    CAR: atributos.CAR.value,
+                    PRE: atributos.PRE.value,
+                    RES: atributos.RES.value
+                },
+                habilidades: habilidadesTextarea.value,
+                historia: document.getElementById('historia').value,
+                vidaMax: vidaMaxInput.value,
+                vidaAtual: vidaAtualInput.value
+            };
+            
+            localStorage.setItem('fichaNightfall', JSON.stringify(dados));
+        }
+
+        function carregarDados() {
+            const dados = JSON.parse(localStorage.getItem('fichaNightfall'));
+            if(dados) {
+                document.getElementById('nome').value = dados.nome || '';
+                classeSelect.value = dados.classe || 'Humano';
+                
+                setTimeout(() => {
+                    subclasseSelect.value = dados.subclasse || '';
+                    habilidadesTextarea.value = dados.habilidades || '';
+                    
+                    Object.entries(dados.atributos).forEach(([atributo, valor]) => {
+                        atributos[atributo].value = valor;
+                    });
+                    
+                    vidaMaxInput.value = dados.vidaMax || 100;
+                    vidaAtualInput.value = dados.vidaAtual || 100;
+                    atualizarVida();
+                }, 50);
+                
+                document.getElementById('historia').value = dados.historia || '';
+            }
+        }
+
+        function rolarD20() {
+            const resultado = Math.floor(Math.random() * 20) + 1;
+            const resultadoDiv = document.getElementById('resultado-dado');
+            
+            resultadoDiv.innerHTML = `
+                <div style="font-size: 1.2em; animation: pulse 0.5s ease-in-out;">
+                    🎲 Resultado: ${resultado}
+                    ${resultado === 20 ? '<div style="color: #00ff00;">CRÍTICO LEGENDÁRIO!</div>' : ''}
+                    ${resultado === 1 ? '<div style="color: #ff0000;">FALHA CATASTRÓFICA!</div>' : ''}
+                </div>
+            `;
+            
+            aplicarDano(resultado);
+        }
+
+        // Event Listeners
+        classeSelect.addEventListener('change', atualizarClasse);
+        subclasseSelect.addEventListener('change', () => {
+            if(classeSelect.value === 'Mago' || classeSelect.value === 'Humano') {
+                habilidadesTextarea.value = classes[classeSelect.value.toLowerCase()]
+                    .habilidades[subclasseSelect.value];
+                salvarDados();
+            }
+        });
+
+        vidaMaxInput.addEventListener('input', atualizarVida);
+        vidaAtualInput.addEventListener('input', atualizarVida);
+        document.querySelectorAll('input, select, textarea').forEach(element => {
+            element.addEventListener('input', salvarDados);
+        });
+
+        // Inicialização
+        window.addEventListener('load', carregarDados);
+        atualizarClasse();
+        atualizarVida();
+    </script>
+</body>
+</html>

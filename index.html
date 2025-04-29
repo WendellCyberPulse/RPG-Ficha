@@ -263,6 +263,28 @@
         .botao-salvar:hover {
             background: #ffdf40;
         }
+        .mensagem-salvo {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffd700;
+            color: #5a0000;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            opacity: 0;
+            animation: aparecer 2s ease-in-out;
+            z-index: 1000;
+        }
+
+@keyframes aparecer {
+    0% { opacity: 0; transform: translateX(-50%) translateY(100%); }
+    20% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(100%); }
+}
     </style>
 </head>
 <body>

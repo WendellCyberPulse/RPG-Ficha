@@ -512,6 +512,15 @@
             };
             
             localStorage.setItem('fichaNightfall', JSON.stringify(dados));
+            const mensagem = document.createElement('div');
+            mensagem.className = 'mensagem-salvo';
+            mensagem.textContent = 'Progresso salvo com sucesso! ✅';
+            document.body.appendChild(mensagem);
+    
+    // Remover após animação
+            setTimeout(() => {
+            mensagem.remove();
+            }, 2000);
         }
 
         function carregarDados() {

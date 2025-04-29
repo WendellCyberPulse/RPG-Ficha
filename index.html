@@ -135,28 +135,16 @@
 
         .d20-button {
             position: relative;
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(145deg, #ffd700, #c4a500);
-            border: none;
+            width: 180px;
+            height: 120px;
+            background: linear-gradient(45deg, #5a0000, #8d0000);
+            border: 4px solid #ffd700;
             border-radius: 15px;
             cursor: pointer;
-            transform-style: preserve-3d;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
-            margin: 20px;
-        }
-
-        .d20-button::before {
-            content: "🎲";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 1.4em;
-            font-weight: bold;
-            color: #2a2a2a;
-            text-shadow: 1px 1px 2px rgba(255,255,255,0.3);
+            box-shadow: 
+                0 0 20px rgba(255,215,0,0.3),
+                inset 0 0 15px rgba(0,0,0,0.7);
+            overflow: hidden;
         }
 
         .d20-button::after {
@@ -164,44 +152,53 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            background: linear-gradient(45deg, 
-                transparent 48%, 
-                rgba(0,0,0,0.1) 50%, 
-                transparent 52%);
-            border-radius: 15px;
-        }
-
-        .d20-button:hover {
-            transform: rotate(15deg) scale(1.1);
-            box-shadow: 0 12px 20px rgba(0,0,0,0.3);
-        }
-
-        .d20-button:active {
-            transform: rotate(-15deg) scale(0.95);
-            animation: roll 0.5s ease;
-        }
-
-        @keyframes roll {
-            0% { transform: rotate(0deg) scale(1); }
-            25% { transform: rotate(90deg) scale(0.9); }
-            50% { transform: rotate(180deg) scale(0.85); }
-            75% { transform: rotate(270deg) scale(0.9); }
-            100% { transform: rotate(360deg) scale(1); }
-        }
-
-        .d20-button {
-            clip-path: polygon(
-                50% 0%,
-                80% 10%,
-                100% 35%,
-                100% 70%,
-                80% 90%,
-                50% 100%,
-                20% 90%,
-                0% 70%,
-                0% 35%,
-                20% 10%
+            background: repeating-linear-gradient(
+                90deg,
+                transparent 0%,
+                transparent 5%,
+                rgba(255,215,0,0.1) 5%,
+                rgba(255,215,0,0.1) 10%
             );
+            animation: scan 4s linear infinite;
+        }
+
+        .d20-button span {
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 60px;
+            background: linear-gradient(45deg, #6b6b6b, #3a3a3a);
+            border: 3px solid #ffd700;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .d20-button span::before {
+            content: "";
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 50px;
+            background: linear-gradient(45deg, #4a4a4a, #2a2a2a);
+            border-radius: 4px;
+        }
+
+        .d20-button:hover span {
+            transform: translateY(-50%) rotate(-10deg);
+            right: -28px;
+        }
+
+        .d20-button:active span {
+            transform: translateY(-30%) rotate(5deg);
+        }
+
+        @keyframes scan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
 
         .vida-container {
@@ -326,6 +323,92 @@
             80% { opacity: 1; transform: translateX(-50%) translateY(0); }
             100% { opacity: 0; transform: translateX(-50%) translateY(100%); }
         }
+
+        .equipamentos-section {
+            padding: 15px;
+        }
+
+        .equipamento-item {
+            background: #2a0a0a;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ffd70033;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .equipamento-dano {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        h3 {
+            color: #ffd700;
+            border-left: 3px solid #ffd700;
+            padding-left: 10px;
+            margin-top: 0;
+        }
+
+        /* Novos estilos para a animação do dado */
+        .d20-display {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Courier New', monospace;
+            font-size: 3.5em;
+            color: #ffd700;
+            text-shadow: 0 0 15px #ffd700;
+            opacity: 0.9;
+            z-index: 2;
+            width: 100%;
+            text-align: center;
+        }
+
+        .rolling {
+            animation: rollNumbers 0.5s steps(1) infinite;
+        }
+
+        .critical {
+            animation: pulse 0.3s infinite, glow-gold 0.5s infinite;
+        }
+
+        .failure {
+            animation: pulse 0.3s infinite, glow-red 0.5s infinite;
+        }
+
+        @keyframes rollNumbers {
+            0% { content: "1"; }
+            10% { content: "2"; }
+            20% { content: "3"; }
+            30% { content: "4"; }
+            40% { content: "5"; }
+            50% { content: "6"; }
+            60% { content: "7"; }
+            70% { content: "8"; }
+            80% { content: "9"; }
+            90% { content: "10"; }
+            100% { content: "20"; }
+        }
+
+        @keyframes glow-gold {
+            0% { text-shadow: 0 0 5px #ffd700; }
+            50% { text-shadow: 0 0 20px #ffd700, 0 0 30px #ffd700; }
+            100% { text-shadow: 0 0 5px #ffd700; }
+        }
+
+        @keyframes glow-red {
+            0% { text-shadow: 0 0 5px #ff0000; }
+            50% { text-shadow: 0 0 20px #ff0000, 0 0 30px #ff0000; }
+            100% { text-shadow: 0 0 5px #ff0000; }
+        }
+
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
     </style>
 </head>
 <body>
@@ -350,11 +433,11 @@
                 <div class="field-group">
                     <label>Classe</label>
                     <select id="classe">
-                        <option>Humano</option>
-                        <option>Lobisomem</option>
-                        <option>Vampiro</option>
-                        <option>Backup</option>
-                        <option>Mago</option>
+                        <option value="humano">Humano</option>
+                        <option value="lobisomem">Lobisomem</option>
+                        <option value="vampiro">Vampiro</option>
+                        <option value="backup">Backup</option>
+                        <option value="mago">Mago</option>
                     </select>
                 </div>
             </div>
@@ -370,7 +453,7 @@
         <div class="security-stripes"></div>
 
         <div class="section">
-            <h3 style="color: #ffd700; border-left: 3px solid #ffd700; padding-left: 10px;">Atributos</h3>
+            <h3>Atributos</h3>
             <div class="grid-2col">
                 <div class="field-group">
                     <label>Força</label>
@@ -423,8 +506,15 @@
             </div>
         </div>
 
+        <div class="equipamentos-section">
+            <h3>Equipamentos</h3>
+            <div id="equipamentos-lista">
+                <!-- Equipamentos serão inseridos aqui via JavaScript -->
+            </div>
+        </div>
+
         <div class="section">
-            <h3 style="color: #ffd700; border-left: 3px solid #ffd700; padding-left: 10px;">Dados Complementares</h3>
+            <h3>Dados Complementares</h3>
             <div class="field-group">
                 <label>Habilidades/Fraquezas</label>
                 <textarea id="habilidades" rows="3" readonly></textarea>
@@ -436,15 +526,15 @@
         </div>
 
         <div class="section">
-            <h3 style="color: #ffd700; border-left: 3px solid #ffd700; padding-left: 10px;">Vitalidade</h3>
+            <h3>Vitalidade</h3>
             <div class="vida-container">
                 <div class="barra-vida">
                     <div class="vida-atual" id="vida-barra"></div>
                     <div class="vida-texto" id="vida-texto">100/100</div>
                 </div>
                 <div class="controles-vida">
-                    <input type="number" id="vida-max" value="100" min="0">
-                    <input type="number" id="vida-atual" value="100" min="0">
+                    <input type="number" id="vida-max" value="100" min="0" placeholder="Vida Máxima">
+                    <input type="number" id="vida-atual" value="100" min="0" placeholder="Vida Atual">
                 </div>
             </div>
         </div>
@@ -456,37 +546,73 @@
         <div class="security-stripes"></div>
 
         <div class="section" style="text-align: center; padding: 20px;">
-            <button class="d20-button" onclick="rolarD20()"></button>
+            <button class="d20-button" id="d20-button" onclick="rolarD20()">
+                <div class="d20-display" id="d20-display">20</div>
+                <span></span>
+            </button>
             <div id="resultado-dado" style="margin-top: 15px; color: #ffd700; font-weight: bold;"></div>
         </div>
     </div>
 
     <script>
+        // Banco de dados das classes
         const classes = {
             humano: {
-                emoji: '👤',
+                emoji: '🙎🏽‍♂️',
                 subclasses: ['Jacobins', 'Caipora', 'Pitstop'],
                 atributos: { FOR: 7, AGI: 8, INT: 6, CAR: 8, PRE: 7, RES: 7 },
                 habilidades: {
                     Jacobins: 'Golpes de sacrifício, Aura de fervor\nFraqueza: Fanatismo (-2 em furtividade/diplomacia)',
                     Caipora: 'Combate à distância, Explosivos improvisados\nFraqueza: Dependência de munição',
                     Pitstop: 'Criar/consertar veículos\nFraqueza: Ineficiente sem peças'
+                },
+                equipamentos: {
+                    Jacobins: [
+                        "Espada Revolucionária (1d8)",
+                        "Armadura de Retalhos",
+                        "Bandana da Resistência"
+                    ],
+                    Pitstop: [
+                        "Chave de Grifo Pesado (1d6)",
+                        "Macacão Térmico",
+                        "Kit de Ferramentas"
+                    ],
+                    Caipora: [
+                        "Arco Composto (1d8)",
+                        "Flechas Explosivas",
+                        "Botas de Camuflagem"
+                    ]
                 }
             },
             vampiro: {
                 emoji: '🧛',
                 atributos: { FOR: 8, AGI: 7, INT: 8, CAR: 9, PRE: 7, RES: 8 },
-                habilidades: 'Regeneração, Força, Controle mental\nFraqueza: Luz solar, Prata'
+                habilidades: 'Regeneração, Força, Controle mental\nFraqueza: Luz solar, Prata',
+                equipamentos: [
+                    "Lâmina Sanguinária (2d4+1)",
+                    "Manto das Sombras", 
+                    "Anel de Regeneração Noturna"
+                ]
             },
             lobisomem: {
                 emoji: '🐺',
                 atributos: { FOR: 10, AGI: 9, INT: 5, CAR: 6, PRE: 6, RES: 9 },
-                habilidades: 'Força brutal, Sentidos aguçados\nFraqueza: Prata, Aconito'
+                habilidades: 'Força brutal, Sentidos aguçados\nFraqueza: Prata, Aconito',
+                equipamentos: [
+                    "Garras Afiadas (2d6)",
+                    "Pele de Lobo Alfa", 
+                    "Amuleto Lunar"
+                ]
             },
             backup: {
                 emoji: '🤖',
                 atributos: { FOR: 5, AGI: 7, INT: 10, CAR: 7, PRE: 9, RES: 6 },
-                habilidades: 'Hackear dispositivos\nFraqueza: Vulnerável a PEM'
+                habilidades: 'Hackear dispositivos\nFraqueza: Vulnerável a PEM',
+                equipamentos: [
+                    "Tablet Hacker MK3",
+                    "Pistola Eletromagnética (1d6)",
+                    "Colete à Prova de Balas"
+                ]
             },
             mago: {
                 emoji: '🧙',
@@ -499,6 +625,14 @@
                     Brancos: 'Tempestades\nFraqueza: Locais fechados',
                     Terra: 'Formas animais\nFraqueza: Lentidão',
                     Vermelhos: 'Fogo e magma\nFraqueza: Instabilidade emocional'
+                }, 
+                equipamentos: {
+                    Rio: ["Cajado das Marés", "Anel de Água Pura", "Manto Fluido"],
+                    Mar: ["Tridente de Netuno", "Concha Resonante", "Brânquias Místicas"],
+                    Verdes: ["Semente da Vida", "Raízes Entrelaçadas", "Pólen Curativo"],
+                    Brancos: ["Cetro de Trovão", "Botas Aladas", "Olho do Furacão"],
+                    Terra: ["Martelo Telúrico", "Armadura de Quartzo", "Garras de Obsidiana"],
+                    Vermelhos: ["Lâmina de Magma", "Coroa de Cinzas", "Orbe Ígneo"]
                 }
             }
         };
@@ -507,6 +641,7 @@
         const classeSelect = document.getElementById('classe');
         const subclasseDiv = document.getElementById('subclasse-container');
         const subclasseSelect = document.getElementById('subclasse');
+        const equipamentosLista = document.getElementById('equipamentos-lista');
         const fotoFrame = document.querySelector('.photo-frame');
         const atributos = {
             FOR: document.getElementById('FOR'),
@@ -521,38 +656,87 @@
         const vidaAtualInput = document.getElementById('vida-atual');
         const vidaBarra = document.getElementById('vida-barra');
         const vidaTexto = document.getElementById('vida-texto');
+        const d20Button = document.getElementById('d20-button');
+        const d20Display = document.getElementById('d20-display');
+        const resultadoDado = document.getElementById('resultado-dado');
 
-        function atualizarClasse() {
-            const classe = classeSelect.value.toLowerCase();
+        // Atualizar equipamentos baseado na classe/subclasse
+        function atualizarEquipamentos() {
+            const classe = classeSelect.value;
             const dadosClasse = classes[classe];
             
+            let equipamentos = [];
+            
+            if (dadosClasse.subclasses && subclasseSelect.value) {
+                // Classe com subclasses (Humano ou Mago)
+                equipamentos = dadosClasse.equipamentos[subclasseSelect.value] || [];
+            } else if (Array.isArray(dadosClasse.equipamentos)) {
+                // Classe sem subclasses e equipamentos é array
+                equipamentos = dadosClasse.equipamentos;
+            }
+            
+            // Limpar lista
+            equipamentosLista.innerHTML = '';
+            
+            // Adicionar novos equipamentos
+            equipamentos.forEach(equip => {
+                const [nome, dano] = equip.split('(');
+                const div = document.createElement('div');
+                div.className = 'equipamento-item';
+                
+                div.innerHTML = `
+                    <span>${nome.trim()}</span>
+                    ${dano ? `<span class="equipamento-dano">${dano.replace(')', '')}</span>` : ''}
+                `;
+
+                equipamentosLista.appendChild(div);
+            });
+        }
+
+        // Atualizar classe quando selecionada
+        function atualizarClasse() {
+            const classe = classeSelect.value;
+            const dadosClasse = classes[classe];
+            
+            // Atualizar emoji
             fotoFrame.textContent = dadosClasse.emoji;
             
-            if(dadosClasse.subclasses) {
+            // Atualizar subclasses se existirem
+            if (dadosClasse.subclasses) {
                 subclasseDiv.style.display = 'block';
                 subclasseSelect.innerHTML = dadosClasse.subclasses
                     .map(sc => `<option>${sc}</option>`).join('');
+                
+                // Selecionar primeira subclasse por padrão
+                subclasseSelect.value = dadosClasse.subclasses[0];
             } else {
                 subclasseDiv.style.display = 'none';
             }
             
+            // Atualizar atributos mínimos
             Object.entries(dadosClasse.atributos).forEach(([atributo, valor]) => {
                 const input = atributos[atributo];
                 input.min = valor;
-                if(parseInt(input.value) < valor) {
+                if (parseInt(input.value) < valor || isNaN(parseInt(input.value))) {
                     input.value = valor;
                 }
             });
             
-            if(typeof dadosClasse.habilidades === 'string') {
+            // Atualizar habilidades
+            if (typeof dadosClasse.habilidades === 'string') {
                 habilidadesTextarea.value = dadosClasse.habilidades;
-            } else {
-                habilidadesTextarea.value = dadosClasse.habilidades[subclasseSelect.value];
+            } else if (subclasseSelect.value) {
+                habilidadesTextarea.value = dadosClasse.habilidades[subclasseSelect.value] || '';
             }
             
+            // Atualizar equipamentos
+            atualizarEquipamentos();
+            
+            // Salvar automaticamente
             salvarDados();
         }
 
+        // Atualizar barra de vida
         function atualizarVida() {
             const max = parseInt(vidaMaxInput.value) || 0;
             const atual = parseInt(vidaAtualInput.value) || 0;
@@ -563,12 +747,13 @@
             salvarDados();
         }
 
+        // Aplicar dano baseado no resultado do dado
         function aplicarDano(resultado) {
             let dano = 0;
-            if(resultado === 1) {
+            if (resultado === 1) {
                 const vidaAtual = parseInt(vidaAtualInput.value);
                 dano = Math.floor(vidaAtual / 2);
-            } else if(resultado < 15) {
+            } else if (resultado < 15) {
                 dano = 5;
             }
             
@@ -576,11 +761,12 @@
             vidaAtualInput.value = novaVida;
             atualizarVida();
             
-            if(novaVida === 0) {
+            if (novaVida === 0) {
                 alert('💀 Você morreu!');
             }
         }
 
+        // Salvar dados no localStorage
         function salvarDados() {
             const dados = {
                 nome: document.getElementById('nome').value,
@@ -602,7 +788,7 @@
             
             localStorage.setItem('fichaNightfall', JSON.stringify(dados));
             
-            // Mostrar mensagem
+            // Mostrar mensagem de salvamento
             const mensagem = document.createElement('div');
             mensagem.className = 'mensagem-salvo';
             mensagem.textContent = 'Progresso salvo com sucesso! ✅';
@@ -613,45 +799,92 @@
             }, 2000);
         }
 
+        // Carregar dados do localStorage
         function carregarDados() {
             const dados = JSON.parse(localStorage.getItem('fichaNightfall'));
-            if(dados) {
+            if (dados) {
                 document.getElementById('nome').value = dados.nome || '';
-                classeSelect.value = dados.classe || 'Humano';
+                classeSelect.value = dados.classe || 'humano';
                 document.getElementById('historia').value = dados.historia || '';
                 
+                // Dar tempo para atualizar a classe antes de carregar subclasse
                 setTimeout(() => {
-                    subclasseSelect.value = dados.subclasse || '';
+                    if (dados.subclasse) {
+                        subclasseSelect.value = dados.subclasse;
+                    }
+                    
                     habilidadesTextarea.value = dados.habilidades || '';
                     
-                    Object.entries(dados.atributos).forEach(([atributo, valor]) => {
-                        atributos[atributo].value = valor;
+                    // Atualizar atributos
+                    Object.entries(dados.atributos || {}).forEach(([atributo, valor]) => {
+                        if (atributos[atributo]) {
+                            atributos[atributo].value = valor;
+                        }
                     });
                     
+                    // Atualizar vida
                     vidaMaxInput.value = dados.vidaMax || 100;
                     vidaAtualInput.value = dados.vidaAtual || 100;
                     atualizarVida();
+                    
+                    // Atualizar equipamentos após tudo estar carregado
+                    atualizarEquipamentos();
                 }, 100);
                 
+                // Atualizar classe principal
+                atualizarClasse();
+            } else {
+                // Inicializar com valores padrão
+                classeSelect.value = 'humano';
                 atualizarClasse();
             }
         }
 
+        // Rolar dado D20 com animação
         function rolarD20() {
-            const resultado = Math.floor(Math.random() * 20) + 1;
-            const resultadoDiv = document.getElementById('resultado-dado');
+            // Desativar botão durante a animação
+            d20Button.disabled = true;
             
-            resultadoDiv.innerHTML = `
-                <div style="font-size: 1.2em; animation: pulse 0.5s ease-in-out;">
-                    🎲 Resultado: ${resultado}
-                    ${resultado === 20 ? '<div style="color: #00ff00;">CRÍTICO LEGENDÁRIO!</div>' : ''}
-                    ${resultado === 1 ? '<div style="color: #ff0000;">FALHA CATASTRÓFICA!</div>' : ''}
-                </div>
-            `;
+            // Iniciar animação de rolagem
+            d20Display.textContent = '';
+            d20Display.classList.add('rolling');
             
-            aplicarDano(resultado);
+            // Rolagem mais longa para crítico/falha
+            const isCriticalOrFailure = Math.random() < 0.1; // 10% de chance
+            const duration = isCriticalOrFailure ? 2000 : 1000;
+            
+            setTimeout(() => {
+                // Gerar resultado
+                const resultado = Math.floor(Math.random() * 20) + 1;
+                
+                // Parar animação e mostrar resultado
+                d20Display.classList.remove('rolling');
+                d20Display.textContent = resultado;
+                
+                // Efeitos especiais para crítico/falha
+                if (resultado === 20) {
+                    d20Display.classList.add('critical');
+                    resultadoDado.innerHTML = '<div style="font-size: 1.2em;">CRÍTICO LEGENDÁRIO!</div>';
+                } else if (resultado === 1) {
+                    d20Display.classList.add('failure');
+                    resultadoDado.innerHTML = '<div style="font-size: 1.2em;">FALHA CATASTRÓFICA!</div>';
+                } else {
+                    resultadoDado.innerHTML = `<div style="font-size: 1.2em;">Resultado: ${resultado}</div>`;
+                }
+                
+                // Aplicar dano
+                aplicarDano(resultado);
+                
+                // Reativar botão após 1 segundo
+                setTimeout(() => {
+                    d20Button.disabled = false;
+                    d20Display.classList.remove('critical', 'failure');
+                }, 1000);
+                
+            }, duration);
         }
 
+        // Configurar botões de atributo
         function configurarBotoesAtributo() {
             document.querySelectorAll('.container-atributo').forEach(container => {
                 const input = container.querySelector('input');
@@ -665,7 +898,7 @@
 
                 btnMinus.addEventListener('click', () => {
                     const currentValue = parseInt(input.value || input.min);
-                    if(currentValue > parseInt(input.min)) {
+                    if (currentValue > parseInt(input.min)) {
                         input.value = currentValue - 1;
                         input.dispatchEvent(new Event('input'));
                     }
@@ -675,22 +908,27 @@
 
         // Event Listeners
         classeSelect.addEventListener('change', atualizarClasse);
+        
         subclasseSelect.addEventListener('change', () => {
-            if(classeSelect.value === 'Mago' || classeSelect.value === 'Humano') {
-                habilidadesTextarea.value = classes[classeSelect.value.toLowerCase()]
-                    .habilidades[subclasseSelect.value];
-                salvarDados();
+            const classe = classeSelect.value;
+            const dadosClasse = classes[classe];
+            
+            if (typeof dadosClasse.habilidades === 'object') {
+                habilidadesTextarea.value = dadosClasse.habilidades[subclasseSelect.value] || '';
             }
+            
+            atualizarEquipamentos();
+            salvarDados();
         });
 
         vidaMaxInput.addEventListener('input', atualizarVida);
         vidaAtualInput.addEventListener('input', atualizarVida);
         
+        // Validar valores mínimos nos inputs numéricos
         document.querySelectorAll('input[type="number"]').forEach(input => {
             input.addEventListener('input', function() {
-                if(this.value < parseInt(this.min)) {
+                if (this.value < parseInt(this.min)) {
                     this.value = this.min;
-                    alert(`Valor não pode ser menor que ${this.min}!`);
                 }
                 salvarDados();
             });
@@ -698,8 +936,8 @@
 
         // Inicialização
         window.addEventListener('load', () => {
-            carregarDados();
             configurarBotoesAtributo();
+            carregarDados();
         });
     </script>
 </body>

@@ -71,11 +71,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 10em;
+            font-size: 5em;
             color: #ffd700;
             border-radius: 5px;
             box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-            line-height: 1; 
+            line-height: 1;
         }
 
         .grid-2col {
@@ -263,6 +263,47 @@
         .botao-salvar:hover {
             background: #ffdf40;
         }
+
+        .container-atributo {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .btn-atributo {
+            background: #ffd700;
+            color: #5a0000;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-atributo:hover {
+            background: #ffdf40;
+            transform: scale(1.1);
+        }
+
+        .btn-atributo.plus::after {
+            content: "+";
+        }
+
+        .btn-atributo.minus::after {
+            content: "-";
+        }
+
+        .input-atributo {
+            flex: 1;
+            margin-bottom: 0 !important;
+            text-align: center;
+        }
+
         .mensagem-salvo {
             position: fixed;
             bottom: 20px;
@@ -279,12 +320,12 @@
             z-index: 1000;
         }
 
-@keyframes aparecer {
-    0% { opacity: 0; transform: translateX(-50%) translateY(100%); }
-    20% { opacity: 1; transform: translateX(-50%) translateY(0); }
-    80% { opacity: 1; transform: translateX(-50%) translateY(0); }
-    100% { opacity: 0; transform: translateX(-50%) translateY(100%); }
-}
+        @keyframes aparecer {
+            0% { opacity: 0; transform: translateX(-50%) translateY(100%); }
+            20% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(100%); }
+        }
     </style>
 </head>
 <body>
@@ -325,19 +366,6 @@
                 <select id="subclasse"></select>
             </div>
         </div>
-        <div class="section">
-            <h3 style="color: #ffd700; border-left: 3px solid #ffd700; padding-left: 10px;">Vitalidade</h3>
-            <div class="vida-container">
-                <div class="barra-vida">
-                    <div class="vida-atual" id="vida-barra"></div>
-                    <div class="vida-texto" id="vida-texto">100/100</div>
-                </div>
-                <div class="controles-vida">
-                    <input type="number" id="vida-max" value="100" min="0">
-                    <input type="number" id="vida-atual" value="100" min="0">
-                </div>
-            </div>
-        </div>
 
         <div class="security-stripes"></div>
 
@@ -346,27 +374,51 @@
             <div class="grid-2col">
                 <div class="field-group">
                     <label>Força</label>
-                    <input type="number" id="FOR">
+                    <div class="container-atributo">
+                        <button class="btn-atributo minus"></button>
+                        <input type="number" id="FOR" class="input-atributo">
+                        <button class="btn-atributo plus"></button>
+                    </div>
                 </div>
                 <div class="field-group">
                     <label>Agilidade</label>
-                    <input type="number" id="AGI">
+                    <div class="container-atributo">
+                        <button class="btn-atributo minus"></button>
+                        <input type="number" id="AGI" class="input-atributo">
+                        <button class="btn-atributo plus"></button>
+                    </div>
                 </div>
                 <div class="field-group">
                     <label>Inteligência</label>
-                    <input type="number" id="INT">
+                    <div class="container-atributo">
+                        <button class="btn-atributo minus"></button>
+                        <input type="number" id="INT" class="input-atributo">
+                        <button class="btn-atributo plus"></button>
+                    </div>
                 </div>
                 <div class="field-group">
                     <label>Carisma</label>
-                    <input type="number" id="CAR">
+                    <div class="container-atributo">
+                        <button class="btn-atributo minus"></button>
+                        <input type="number" id="CAR" class="input-atributo">
+                        <button class="btn-atributo plus"></button>
+                    </div>
                 </div>
                 <div class="field-group">
                     <label>Precisão</label>
-                    <input type="number" id="PRE">
+                    <div class="container-atributo">
+                        <button class="btn-atributo minus"></button>
+                        <input type="number" id="PRE" class="input-atributo">
+                        <button class="btn-atributo plus"></button>
+                    </div>
                 </div>
                 <div class="field-group">
                     <label>Resistência</label>
-                    <input type="number" id="RES">
+                    <div class="container-atributo">
+                        <button class="btn-atributo minus"></button>
+                        <input type="number" id="RES" class="input-atributo">
+                        <button class="btn-atributo plus"></button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -380,6 +432,20 @@
             <div class="field-group">
                 <label>História e Motivação</label>
                 <textarea id="historia" rows="4" placeholder="Relate sua jornada até aqui..."></textarea>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3 style="color: #ffd700; border-left: 3px solid #ffd700; padding-left: 10px;">Vitalidade</h3>
+            <div class="vida-container">
+                <div class="barra-vida">
+                    <div class="vida-atual" id="vida-barra"></div>
+                    <div class="vida-texto" id="vida-texto">100/100</div>
+                </div>
+                <div class="controles-vida">
+                    <input type="number" id="vida-max" value="100" min="0">
+                    <input type="number" id="vida-atual" value="100" min="0">
+                </div>
             </div>
         </div>
 
@@ -398,7 +464,7 @@
     <script>
         const classes = {
             humano: {
-                emoji: '🙎🏽‍♂️',
+                emoji: '👤',
                 subclasses: ['Jacobins', 'Caipora', 'Pitstop'],
                 atributos: { FOR: 7, AGI: 8, INT: 6, CAR: 8, PRE: 7, RES: 7 },
                 habilidades: {
@@ -471,9 +537,10 @@
             }
             
             Object.entries(dadosClasse.atributos).forEach(([atributo, valor]) => {
-                atributos[atributo].min = valor;
-                if(parseInt(atributos[atributo].value) < valor) {
-                    atributos[atributo].value = valor;
+                const input = atributos[atributo];
+                input.min = valor;
+                if(parseInt(input.value) < valor) {
+                    input.value = valor;
                 }
             });
             
@@ -534,22 +601,23 @@
             };
             
             localStorage.setItem('fichaNightfall', JSON.stringify(dados));
+            
+            // Mostrar mensagem
             const mensagem = document.createElement('div');
             mensagem.className = 'mensagem-salvo';
             mensagem.textContent = 'Progresso salvo com sucesso! ✅';
             document.body.appendChild(mensagem);
-    
-    // Remover após animação
+            
             setTimeout(() => {
-            mensagem.remove();
+                mensagem.remove();
             }, 2000);
         }
 
         function carregarDados() {
             const dados = JSON.parse(localStorage.getItem('fichaNightfall'));
             if(dados) {
-                classeSelect.value = dados.classe || 'Humano';
                 document.getElementById('nome').value = dados.nome || '';
+                classeSelect.value = dados.classe || 'Humano';
                 document.getElementById('historia').value = dados.historia || '';
                 
                 setTimeout(() => {
@@ -584,6 +652,27 @@
             aplicarDano(resultado);
         }
 
+        function configurarBotoesAtributo() {
+            document.querySelectorAll('.container-atributo').forEach(container => {
+                const input = container.querySelector('input');
+                const btnPlus = container.querySelector('.plus');
+                const btnMinus = container.querySelector('.minus');
+
+                btnPlus.addEventListener('click', () => {
+                    input.value = parseInt(input.value || input.min) + 1;
+                    input.dispatchEvent(new Event('input'));
+                });
+
+                btnMinus.addEventListener('click', () => {
+                    const currentValue = parseInt(input.value || input.min);
+                    if(currentValue > parseInt(input.min)) {
+                        input.value = currentValue - 1;
+                        input.dispatchEvent(new Event('input'));
+                    }
+                });
+            });
+        }
+
         // Event Listeners
         classeSelect.addEventListener('change', atualizarClasse);
         subclasseSelect.addEventListener('change', () => {
@@ -608,7 +697,10 @@
         });
 
         // Inicialização
-        window.addEventListener('load', carregarDados);
+        window.addEventListener('load', () => {
+            carregarDados();
+            configurarBotoesAtributo();
+        });
     </script>
 </body>
 </html>

@@ -71,10 +71,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3em;
+            font-size: 10em;
             color: #ffd700;
             border-radius: 5px;
             box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            line-height: 1; 
         }
 
         .grid-2col {
@@ -100,11 +101,6 @@
             background: #2a0a0a;
             color: #fff1e6;
             transition: all 0.3s ease;
-        }
-
-        input:read-only {
-            background: #3a0d0d;
-            cursor: not-allowed;
         }
 
         input:focus, select:focus, textarea:focus {
@@ -252,6 +248,21 @@
             background: #3a0d0d;
             text-align: center;
         }
+
+        .botao-salvar {
+            background: #ffd700;
+            color: #5a0000;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .botao-salvar:hover {
+            background: #ffdf40;
+        }
     </style>
 </head>
 <body>
@@ -266,19 +277,7 @@
         <div class="photo-section">
             <div class="photo-frame">🖼️</div>
         </div>
-        <div class="section">
-          <h3 style="color: #ffd700; border-left: 3px solid #ffd700; padding-left: 10px;">Vitalidade</h3>
-          <div class="vida-container">
-              <div class="barra-vida">
-                  <div class="vida-atual" id="vida-barra"></div>
-                  <div class="vida-texto" id="vida-texto">100/100</div>
-              </div>
-              <div class="controles-vida">
-                  <input type="number" id="vida-max" value="100" min="0">
-                  <input type="number" id="vida-atual" value="100" min="0">
-              </div>
-          </div>
-      </div>
+
         <div class="section">
             <div class="grid-2col">
                 <div class="field-group">
@@ -304,6 +303,19 @@
                 <select id="subclasse"></select>
             </div>
         </div>
+        <div class="section">
+            <h3 style="color: #ffd700; border-left: 3px solid #ffd700; padding-left: 10px;">Vitalidade</h3>
+            <div class="vida-container">
+                <div class="barra-vida">
+                    <div class="vida-atual" id="vida-barra"></div>
+                    <div class="vida-texto" id="vida-texto">100/100</div>
+                </div>
+                <div class="controles-vida">
+                    <input type="number" id="vida-max" value="100" min="0">
+                    <input type="number" id="vida-atual" value="100" min="0">
+                </div>
+            </div>
+        </div>
 
         <div class="security-stripes"></div>
 
@@ -312,27 +324,27 @@
             <div class="grid-2col">
                 <div class="field-group">
                     <label>Força</label>
-                    <input type="number" id="FOR" readonly>
+                    <input type="number" id="FOR">
                 </div>
                 <div class="field-group">
                     <label>Agilidade</label>
-                    <input type="number" id="AGI" readonly>
+                    <input type="number" id="AGI">
                 </div>
                 <div class="field-group">
                     <label>Inteligência</label>
-                    <input type="number" id="INT" readonly>
+                    <input type="number" id="INT">
                 </div>
                 <div class="field-group">
                     <label>Carisma</label>
-                    <input type="number" id="CAR" readonly>
+                    <input type="number" id="CAR">
                 </div>
                 <div class="field-group">
                     <label>Precisão</label>
-                    <input type="number" id="PRE" readonly>
+                    <input type="number" id="PRE">
                 </div>
                 <div class="field-group">
                     <label>Resistência</label>
-                    <input type="number" id="RES" readonly>
+                    <input type="number" id="RES">
                 </div>
             </div>
         </div>
@@ -349,6 +361,10 @@
             </div>
         </div>
 
+        <div class="section" style="text-align: center;">
+            <button class="botao-salvar" onclick="salvarDados()">💾 Salvar Progresso</button>
+        </div>
+
         <div class="security-stripes"></div>
 
         <div class="section" style="text-align: center; padding: 20px;">
@@ -360,7 +376,7 @@
     <script>
         const classes = {
             humano: {
-                emoji: '👤',
+                emoji: '🙎🏽‍♂️',
                 subclasses: ['Jacobins', 'Caipora', 'Pitstop'],
                 atributos: { FOR: 7, AGI: 8, INT: 6, CAR: 8, PRE: 7, RES: 7 },
                 habilidades: {
@@ -433,8 +449,10 @@
             }
             
             Object.entries(dadosClasse.atributos).forEach(([atributo, valor]) => {
-                atributos[atributo].value = valor;
                 atributos[atributo].min = valor;
+                if(parseInt(atributos[atributo].value) < valor) {
+                    atributos[atributo].value = valor;
+                }
             });
             
             if(typeof dadosClasse.habilidades === 'string') {
@@ -459,7 +477,8 @@
         function aplicarDano(resultado) {
             let dano = 0;
             if(resultado === 1) {
-                dano = parseInt(vidaAtualInput.value);
+                const vidaAtual = parseInt(vidaAtualInput.value);
+                dano = Math.floor(vidaAtual / 2);
             } else if(resultado < 15) {
                 dano = 5;
             }
@@ -498,8 +517,9 @@
         function carregarDados() {
             const dados = JSON.parse(localStorage.getItem('fichaNightfall'));
             if(dados) {
-                document.getElementById('nome').value = dados.nome || '';
                 classeSelect.value = dados.classe || 'Humano';
+                document.getElementById('nome').value = dados.nome || '';
+                document.getElementById('historia').value = dados.historia || '';
                 
                 setTimeout(() => {
                     subclasseSelect.value = dados.subclasse || '';
@@ -512,9 +532,9 @@
                     vidaMaxInput.value = dados.vidaMax || 100;
                     vidaAtualInput.value = dados.vidaAtual || 100;
                     atualizarVida();
-                }, 50);
+                }, 100);
                 
-                document.getElementById('historia').value = dados.historia || '';
+                atualizarClasse();
             }
         }
 
@@ -545,14 +565,19 @@
 
         vidaMaxInput.addEventListener('input', atualizarVida);
         vidaAtualInput.addEventListener('input', atualizarVida);
-        document.querySelectorAll('input, select, textarea').forEach(element => {
-            element.addEventListener('input', salvarDados);
+        
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener('input', function() {
+                if(this.value < parseInt(this.min)) {
+                    this.value = this.min;
+                    alert(`Valor não pode ser menor que ${this.min}!`);
+                }
+                salvarDados();
+            });
         });
 
         // Inicialização
         window.addEventListener('load', carregarDados);
-        atualizarClasse();
-        atualizarVida();
     </script>
 </body>
 </html>

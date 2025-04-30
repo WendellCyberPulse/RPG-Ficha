@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="apple-touch-icon" sizes="180x180" href="../logo.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="../logo.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="../logo.png">
-    <link rel="manifest" href="../logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./logo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./logo.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./logo.png">
+    <link rel="manifest" href="./logo.png">
     <title>Ficha Nightfall RPG</title>
     <style>
         body {
@@ -753,15 +753,18 @@
 
         // Aplicar dano baseado no resultado do dado
         function aplicarDano(resultado) {
+            const resistencia = parseInt(document.getElementById('RES').value) || 0;
             let dano = 0;
             if (resultado === 1) {
                 const vidaAtual = parseInt(vidaAtualInput.value);
-                dano = Math.floor(vidaAtual / 2);
+                dano = Math.floor(vidaAtual / 2 );
             } else if (resultado < 15) {
-                dano = 5;
+                dano = 10 ;
             }
-            
-            const novaVida = Math.max(0, parseInt(vidaAtualInput.value) - dano);
+
+            let danoFinal = Math.max(dano - resistencia + resultado, 0);
+            const novaVida = Math.max(0, parseInt(vidaAtualInput.value) - danoFinal);
+
             vidaAtualInput.value = novaVida;
             atualizarVida();
             

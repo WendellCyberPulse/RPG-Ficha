@@ -764,7 +764,7 @@
             }
         
             // Fórmula de Resistência (Poderosa mas não invencível)
-            let reducao = Math.min(RES * 0.8, danoBase * 0.75); // Limite de 75% de redução
+            let reducao = Math.min(RES * 1, danoBase * 1); // Limite de 75% de redução
             let danoFinal = Math.max(danoBase - reducao, Math.floor(danoBase * 0.1)); // Mínimo 10% do dano original
         
             // Aplicação do Dano

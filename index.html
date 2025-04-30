@@ -758,9 +758,9 @@
         
             // Sistema de Dano Base
             if (resultado === 1) { // Falha Crítica
-                danoBase = Math.floor(parseInt(vidaAtualInput.value) * 0.25); // 25% da vida atual
+                danoBase = Math.floor(parseInt(vidaAtualInput.value) / 2); // 50% da vida atual
             } else if (resultado < 15) { // Falha Normal
-                danoBase = 10 + resultado; // Dano escala com o resultado
+                danoBase = 10 + (15 - resultado); // Dano escala com o resultado
             }
         
             // Fórmula de Resistência (Poderosa mas não invencível)

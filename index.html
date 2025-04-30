@@ -752,27 +752,39 @@
         }
 
         // Aplicar dano baseado no resultado do dado
-        function aplicarDano(resultado) {
-            const resistencia = parseInt(document.getElementById('RES').value) || 0;
-            let dano = 0;
-            if (resultado === 1) {
-                const vidaAtual = parseInt(vidaAtualInput.value);
-                dano = Math.floor(vidaAtual / 2 );
-            } else if (resultado < 15) {
-                dano = 10 ;
+       function aplicarDano(resultado) {
+            const RES = parseInt(document.getElementById('RES').value) || 0;
+            let danoBase = 0;
+        
+            // Sistema de Dano Base
+            if (resultado === 1) { // Falha Crítica
+                danoBase = Math.floor(parseInt(vidaAtualInput.value) * 0.25); // 25% da vida atual
+            } else if (resultado < 15) { // Falha Normal
+                danoBase = 10 + resultado; // Dano escala com o resultado
             }
-
-            let danoFinal = Math.max(dano - resistencia + resultado, 0);
-            const novaVida = Math.max(0, parseInt(vidaAtualInput.value) - danoFinal);
-
+        
+            // Fórmula de Resistência (Poderosa mas não invencível)
+            let reducao = Math.min(RES * 0.8, danoBase * 0.75); // Limite de 75% de redução
+            let danoFinal = Math.max(danoBase - reducao, Math.floor(danoBase * 0.1)); // Mínimo 10% do dano original
+        
+            // Aplicação do Dano
+            const novaVida = Math.max(0, parseInt(vidaAtualInput.value) - Math.floor(danoFinal));
             vidaAtualInput.value = novaVida;
             atualizarVida();
-            
+        
+            // Feedback Detalhado
+            const resultadoDiv = document.getElementById('resultado-dado');
+            resultadoDiv.innerHTML += `
+                <div style="color: #ffd700; margin-top: 5px; border-top: 1px solid #ffd70033; padding-top: 5px;">
+                    RESISTÊNCIA: ${RES} | DANO BASE: ${danoBase}<br>
+                    REDUÇÃO: ${Math.floor(reducao)} | DANO FINAL: ${Math.floor(danoFinal)}
+                </div>
+            `;
+        
             if (novaVida === 0) {
                 alert('💀 Você morreu!');
             }
         }
-
         // Salvar dados no localStorage
         function salvarDados() {
             const dados = {

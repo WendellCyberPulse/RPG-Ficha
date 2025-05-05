@@ -933,6 +933,9 @@
         // Carregar dados do localStorage
         function carregarDados() {
             const dados = JSON.parse(localStorage.getItem('fichaNightfall'));
+            const escudoMaxInput = document.getElementById('Shield-max');
+            const escudoAtualInput = document.getElementById('escudo-atual');
+
             if (dados) {
                 document.getElementById('nome').value = dados.nome || '';
                 classeSelect.value = dados.classe || 'humano';

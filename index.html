@@ -837,69 +837,54 @@
         // Aplicar dano baseado no resultado do dado
         function aplicarDano(resultado) {
             const RES = parseInt(document.getElementById('RES').value) || 0;
-            const escudoMax = parseInt(document.getElementById('Shield-max').value) || 0;
-            const escudoAtualInput = document.getElementById('escudo-atual');
-            const vidaAtualInput = document.getElementById('vida-atual');
             const vidaMax = parseInt(document.getElementById('vida-max').value) || 100;
+            const escudoMax = parseInt(document.getElementById('Shield-max').value) || 0;
 
-            let escudoAtual = parseInt(escudoAtualInput.value) || 0;
-            let vidaAtual = parseInt(vidaAtualInput.value) || 0;
+            let vidaAtual = parseInt(document.getElementById('vida-atual').value) || 0;
+            let escudoAtual = parseInt(document.getElementById('escudo-atual').value) || 0;
 
-            let danoBase = 0;
+            let dano = 0;
+            let mensagem = "";
 
-            if (resultado === 1) {
-                danoBase = Math.floor((vidaAtual + escudoAtual) / 2); // metade da vida+escudo atual
+            if (resultado === 20) {
+                // Recompensa Épica
+                escudoAtual = escudoMax;
+                vidaAtual = Math.min(vidaAtual + 10, vidaMax);
+                mensagem = "🎉 Rolagem 20! Escudo restaurado e +10 de vida!";
+            } else if (resultado === 1) {
+                dano = Math.floor((escudoAtual > 0 ? escudoAtual : vidaAtual) / 2);
+                if (escudoAtual > 0) {
+                    escudoAtual = Math.max(escudoAtual - dano, 0);
+                    mensagem = `💥 Falha crítica! Perdeu ${dano} de escudo.`;
+                } else {
+                    vidaAtual = Math.max(vidaAtual - dano, 0);
+                    mensagem = `💥 Falha crítica! Perdeu ${dano} de vida.`;
+                }
             } else if (resultado < 15) {
-                danoBase = 5;
+                dano = 5;
+                if (escudoAtual > 0) {
+                    escudoAtual = Math.max(escudoAtual - dano, 0);
+                    mensagem = `⚠️ Resultado ${resultado}: Perdeu 5 de escudo.`;
+                } else {
+                    vidaAtual = Math.max(vidaAtual - dano, 0);
+                    mensagem = `⚠️ Resultado ${resultado}: Perdeu 5 de vida.`;
+                }
             } else {
-                // resultado >= 15: cura escudo ou vida
-                if (resultado === 20) {
-                    escudoAtual = escudoMax;
-                    vidaAtual = Math.min(vidaAtual + 10, vidaMax);
-                } else {
-                    escudoAtual = Math.min(escudoAtual + 10, escudoMax);
-                }
-
-                // Atualiza UI e sai da função
-                escudoAtualInput.value = escudoAtual;
-                vidaAtualInput.value = vidaAtual;
-                atualizarEscudo();
-                atualizarVida();
-                
-                const resultadoDiv = document.getElementById('resultado-dado');
-                resultadoDiv.innerHTML += `
-                    <div style="color: #00bfff; margin-top: 5px; border-top: 1px solid #00bfff33; padding-top: 5px;">
-                        🎲 ROLAGEM BOA! ESCUDO ${resultado === 20 ? 'TOTALMENTE RESTAURADO' : '+10'}${resultado === 20 ? ' + VIDA +10' : ''}
-                    </div>
-                `;
-                return;
+                mensagem = `✅ Resultado ${resultado}: Sem dano.`;
             }
 
-            // Aplica o dano no escudo primeiro
-            if (escudoAtual > 0) {
-                if (danoBase <= escudoAtual) {
-                    escudoAtual -= danoBase;
-                    danoBase = 0;
-                } else {
-                    danoBase -= escudoAtual;
-                    escudoAtual = 0;
-                }
-            }
+            // Atualiza campos
+            document.getElementById('escudo-atual').value = escudoAtual;
+            document.getElementById('vida-atual').value = vidaAtual;
 
-            // Aplica o restante do dano na vida
-            if (danoBase > 0) {
-                vidaAtual = Math.max(vidaAtual - danoBase, 0);
-            }
-
-            escudoAtualInput.value = escudoAtual;
-            vidaAtualInput.value = vidaAtual;
             atualizarEscudo();
             atualizarVida();
 
+            // Feedback
             const resultadoDiv = document.getElementById('resultado-dado');
             resultadoDiv.innerHTML += `
                 <div style="color: #ffd700; margin-top: 5px; border-top: 1px solid #ffd70033; padding-top: 5px;">
-                    DANO APLICADO: ${danoBase} | ESCUDO: ${escudoAtual} | VIDA: ${vidaAtual}
+                    ${mensagem}
                 </div>
             `;
 
@@ -907,6 +892,7 @@
                 alert('💀 Você morreu!');
             }
         }
+
 
 
         // Salvar dados no localStorage

@@ -957,6 +957,11 @@
                     vidaMaxInput.value = dados.vidaMax || 100;
                     vidaAtualInput.value = dados.vidaAtual || 100;
                     atualizarVida();
+
+                     // Atualizar escudo 
+                    escudoMaxInput.value = dados.escudoMax || 0;
+                    escudoAtualInput.value = dados.escudoAtual || 0;
+                    atualizarEscudo();
                     
                     // Atualizar equipamentos após tudo estar carregado
                     atualizarEquipamentos();

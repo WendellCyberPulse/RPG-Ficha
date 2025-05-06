@@ -248,6 +248,7 @@
         .controles-vida input {
             background: #3a0d0d;
             text-align: center;
+            width: 90%;
         }
 
         .botao-salvar {
@@ -413,6 +414,58 @@
             50% { transform: translate(-50%, -50%) scale(1.2); }
             100% { transform: translate(-50%, -50%) scale(1); }
         }
+
+        .escudo-container {
+            padding: 15px;
+            background: #2a0a0a;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .barra-escudo {
+            height: 25px;
+            background: #4a0000;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            border: 2px solid #ffd700;
+        }
+
+        .escudo-atual {
+            background-color: #00aaff;
+            height: 100%;
+            width: 100%;
+            transition: width 0.3s;
+            border-radius: 5px 0 0 5px;
+        }
+
+        .escudo-texto {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            top: 0;
+            line-height: 25px;
+        }
+
+        .controles-escudo{
+            display: grid;
+            grid-template-columns: 5fr 5fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .controles-escudo input {
+            background: #3a0d0d;
+            text-align: center;
+            width: 90%;
+    
+        }
+        #classe{
+            text-align: center;
+        }
+
     </style>
 </head>
 <body>
@@ -531,6 +584,16 @@
 
         <div class="section">
             <h3>Vitalidade</h3>
+            <div class="escudo-container">
+                <div class="barra-escudo">
+                    <div class="escudo-atual" id="escudo-barra"></div>
+                    <div class="escudo-texto" id="escudo-texto">100/100</div>
+                </div>
+                <div class="controles-escudo">
+                    <input type="number" id="Shield-max" value="100" min="0" placeholder="Escudo Máxima">
+                    <input type="number" id="escudo-atual" value="100" min="0" placeholder="Escudo Atual">
+                </div>
+            </div>
             <div class="vida-container">
                 <div class="barra-vida">
                     <div class="vida-atual" id="vida-barra"></div>
@@ -663,6 +726,8 @@
         const d20Button = document.getElementById('d20-button');
         const d20Display = document.getElementById('d20-display');
         const resultadoDado = document.getElementById('resultado-dado');
+        const escudoMaxInput   = document.getElementById('Shield-max');
+        const escudoAtualInput = document.getElementById('escudo-atual')
 
         // Atualizar equipamentos baseado na classe/subclasse
         function atualizarEquipamentos() {
@@ -750,41 +815,102 @@
             vidaTexto.textContent = `${atual}/${max}`;
             salvarDados();
         }
+        function atualizarEscudo() {
+            const escudoMaxInput = document.getElementById('Shield-max');
+            const escudoAtualInput = document.getElementById('escudo-atual');
+            const escudoBarra = document.getElementById('escudo-barra');
+            const escudoTexto = document.getElementById('escudo-texto');
+
+            let escudoMax = parseInt(escudoMaxInput.value) || 0;
+            let escudoAtual = parseInt(escudoAtualInput.value) || 0;
+
+            // Corrige se escudoAtual for maior que o máximo
+            if (escudoAtual > escudoMax) {
+                escudoAtual = escudoMax;
+                escudoAtualInput.value = escudoMax;
+            }
+
+            const largura = escudoMax > 0 ? (escudoAtual / escudoMax) * 100 : 0;
+            escudoBarra.style.width = `${largura}%`;
+            escudoTexto.textContent = `${escudoAtual}/${escudoMax}`;
+        }
+
 
         // Aplicar dano baseado no resultado do dado
-       function aplicarDano(resultado) {
+        function aplicarDano(resultado) {
             const RES = parseInt(document.getElementById('RES').value) || 0;
+            const escudoMax = parseInt(document.getElementById('Shield-max').value) || 0;
+            const escudoAtualInput = document.getElementById('escudo-atual');
+            const vidaAtualInput = document.getElementById('vida-atual');
+            const vidaMax = parseInt(document.getElementById('vida-max').value) || 100;
+
+            let escudoAtual = parseInt(escudoAtualInput.value) || 0;
+            let vidaAtual = parseInt(vidaAtualInput.value) || 0;
+
             let danoBase = 0;
-        
-            // Sistema de Dano Base
-            if (resultado === 1) { // Falha Crítica
-                danoBase = Math.floor(parseInt(vidaAtualInput.value) / 2); // 50% da vida atual
-            } else if (resultado < 15) { // Falha Normal
-                danoBase = 10 + (15 - resultado); // Dano escala com o resultado
+
+            if (resultado === 1) {
+                danoBase = Math.floor((vidaAtual + escudoAtual) / 2); // metade da vida+escudo atual
+            } else if (resultado < 15) {
+                danoBase = 5;
+            } else {
+                // resultado >= 15: cura escudo ou vida
+                if (resultado === 20) {
+                    escudoAtual = escudoMax;
+                    vidaAtual = Math.min(vidaAtual + 10, vidaMax);
+                } else {
+                    escudoAtual = Math.min(escudoAtual + 10, escudoMax);
+                }
+
+                // Atualiza UI e sai da função
+                escudoAtualInput.value = escudoAtual;
+                vidaAtualInput.value = vidaAtual;
+                atualizarEscudo();
+                atualizarVida();
+                
+                const resultadoDiv = document.getElementById('resultado-dado');
+                resultadoDiv.innerHTML += `
+                    <div style="color: #00bfff; margin-top: 5px; border-top: 1px solid #00bfff33; padding-top: 5px;">
+                        🎲 ROLAGEM BOA! ESCUDO ${resultado === 20 ? 'TOTALMENTE RESTAURADO' : '+10'}${resultado === 20 ? ' + VIDA +10' : ''}
+                    </div>
+                `;
+                return;
             }
-        
-            // Fórmula de Resistência (Poderosa mas não invencível)
-            let reducao = Math.min(RES * 0.8, danoBase * 0.75); // Limite de 75% de redução
-            let danoFinal = Math.max(danoBase - reducao, Math.floor(danoBase * 0.1)); // Mínimo 10% do dano original
-        
-            // Aplicação do Dano
-            const novaVida = Math.max(0, parseInt(vidaAtualInput.value) - Math.floor(danoFinal));
-            vidaAtualInput.value = novaVida;
+
+            // Aplica o dano no escudo primeiro
+            if (escudoAtual > 0) {
+                if (danoBase <= escudoAtual) {
+                    escudoAtual -= danoBase;
+                    danoBase = 0;
+                } else {
+                    danoBase -= escudoAtual;
+                    escudoAtual = 0;
+                }
+            }
+
+            // Aplica o restante do dano na vida
+            if (danoBase > 0) {
+                vidaAtual = Math.max(vidaAtual - danoBase, 0);
+            }
+
+            escudoAtualInput.value = escudoAtual;
+            vidaAtualInput.value = vidaAtual;
+            atualizarEscudo();
             atualizarVida();
-        
-            // Feedback Detalhado
+
             const resultadoDiv = document.getElementById('resultado-dado');
             resultadoDiv.innerHTML += `
                 <div style="color: #ffd700; margin-top: 5px; border-top: 1px solid #ffd70033; padding-top: 5px;">
-                    RESISTÊNCIA: ${RES} | DANO BASE: ${danoBase}<br>
-                    REDUÇÃO: ${Math.floor(reducao)} | DANO FINAL: ${Math.floor(danoFinal)}
+                    DANO APLICADO: ${danoBase} | ESCUDO: ${escudoAtual} | VIDA: ${vidaAtual}
                 </div>
             `;
-        
-            if (novaVida === 0) {
+
+            if (vidaAtual === 0) {
                 alert('💀 Você morreu!');
             }
         }
+
+
         // Salvar dados no localStorage
         function salvarDados() {
             const dados = {
@@ -802,7 +928,9 @@
                 habilidades: habilidadesTextarea.value,
                 historia: document.getElementById('historia').value,
                 vidaMax: vidaMaxInput.value,
-                vidaAtual: vidaAtualInput.value
+                vidaAtual: vidaAtualInput.value,
+                escudoMax: escudoMaxInput.value,
+                escudoAtual: escudoAtualInput.value
             };
             
             localStorage.setItem('fichaNightfall', JSON.stringify(dados));
@@ -821,6 +949,9 @@
         // Carregar dados do localStorage
         function carregarDados() {
             const dados = JSON.parse(localStorage.getItem('fichaNightfall'));
+            const escudoMaxInput = document.getElementById('Shield-max');
+            const escudoAtualInput = document.getElementById('escudo-atual');
+
             if (dados) {
                 document.getElementById('nome').value = dados.nome || '';
                 classeSelect.value = dados.classe || 'humano';
@@ -845,6 +976,13 @@
                     vidaMaxInput.value = dados.vidaMax || 100;
                     vidaAtualInput.value = dados.vidaAtual || 100;
                     atualizarVida();
+
+                    // Atualizar escudo 
+                    escudoMaxInput.value = dados.escudoMax || 0;
+                    escudoAtualInput.value = dados.escudoAtual || 0;
+                    atualizarEscudo();
+ 
+
                     
                     // Atualizar equipamentos após tudo estar carregado
                     atualizarEquipamentos();
@@ -861,6 +999,7 @@
 
         // Rolar dado D20 com animação
         function rolarD20() {
+            
             // Desativar botão durante a animação
             d20Button.disabled = true;
             
@@ -942,6 +1081,9 @@
 
         vidaMaxInput.addEventListener('input', atualizarVida);
         vidaAtualInput.addEventListener('input', atualizarVida);
+        document.getElementById('Shield-max').addEventListener('input', atualizarEscudo);
+        document.getElementById('escudo-atual').addEventListener('input', atualizarEscudo);
+
         
         // Validar valores mínimos nos inputs numéricos
         document.querySelectorAll('input[type="number"]').forEach(input => {

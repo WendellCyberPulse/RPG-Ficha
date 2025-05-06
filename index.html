@@ -858,9 +858,7 @@
                 if (resultado === 20) {
                     escudoAtual = escudoMax;
                     vidaAtual = Math.min(vidaAtual + 10, vidaMax);
-                } else {
-                    escudoAtual = Math.min(escudoAtual + 10, escudoMax);
-                }
+                } 
 
                 // Atualiza UI e sai da função
                 escudoAtualInput.value = escudoAtual;
@@ -871,19 +869,21 @@
                 const resultadoDiv = document.getElementById('resultado-dado');
                 resultadoDiv.innerHTML += `
                     <div style="color: #00bfff; margin-top: 5px; border-top: 1px solid #00bfff33; padding-top: 5px;">
-                        🎲 ROLAGEM BOA! ESCUDO ${resultado === 20 ? 'TOTALMENTE RESTAURADO' : '+10'}${resultado === 20 ? ' + VIDA +10' : ''}
+                         ${resultado === 20 ? 'TOTALMENTE RESTAURADO' : ''}${resultado === 20 ? ' + VIDA +10' : ''}
                     </div>
                 `;
                 return;
             }
 
-            // Aplica o dano no escudo primeiro
+            // Aplica o dano no escudo primeiro 
+            const reducao = 1 - (RES / 100);
+            const danoReduzido = Math.floor(danoBase * (1 - RES / 100));
             if (escudoAtual > 0) {
                 if (danoBase <= escudoAtual) {
-                    escudoAtual -= danoBase;
+                    escudoAtual -= danoReduzido;
                     danoBase = 0;
                 } else {
-                    danoBase -= escudoAtual;
+                    danoBase -= danoReduzido;
                     escudoAtual = 0;
                 }
             }

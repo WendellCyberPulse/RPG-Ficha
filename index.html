@@ -465,6 +465,103 @@
         #classe{
             text-align: center;
         }
+        .level-circle {
+        position: absolute;
+        bottom: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 50px;
+        border: 3px solid #ffd700;
+        border-radius: 50%;
+        background: #5c1a1a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #ffd700;
+        text-shadow: 1px 1px 2px #000;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    .xp-container {
+        margin-top: 35px;
+        padding: 0 20px;
+        
+    }
+
+    .xp-bar {
+        height: 15px;
+        background: #2a0a0a;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        border: 1px solid #ffd700;
+    }
+
+    .xp-fill {
+        height: 100%;
+        background: linear-gradient(45deg, #00ff00, #008800);
+        width: 0%;
+        transition: width 0.3s ease;
+    }
+
+    .xp-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 0.7em;
+        text-shadow: 1px 1px 2px black;
+        white-space: nowrap;
+    }
+    .container-XP {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+        margin-top: 10px;
+        width: 100%;
+        max-width: 220px; /* Ajuste conforme necessário */
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+    }
+
+    .btn-XP {
+        background: #ffd700;
+        color: #5a0000;
+        border: none;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-XP:hover {
+        background: #ffdf40;
+        transform: scale(1.1);
+    }
+
+    .btn-XP.plus::after {
+        content: "+";
+    }
+
+    .btn-XP.minus::after {
+        content: "-";
+    }
+
+    #XP {
+        width: 80px;
+        text-align: center;
+        margin: 0 5px;
+    }
 
     </style>
 </head>
@@ -479,6 +576,21 @@
 
         <div class="photo-section">
             <div class="photo-frame">🖼️</div>
+            <div class="level-circle" id="level-circle">1</div>
+        </div>
+        <div class="xp-container">
+            <div class="xp-bar">
+                <div class="xp-fill" id="xp-fill"></div>
+                <div class="xp-text" id="xp-text">0/1000</div>
+            </div>
+            <div class="field-group">
+                <div class="container-XP">
+                    <label>XP</label>
+                    <button class="btn-XP minus"></button>
+                    <input type="number" id="XP" value="0" min="0">
+                    <button class="btn-XP plus"></button>
+                </div>
+            </div>
         </div>
 
         <div class="section">
@@ -707,6 +819,12 @@
         };
 
         // Elementos DOM
+        const xpInput = document.getElementById('XP');
+        const btnXpPlus = document.querySelector('.btn-XP.plus');
+        const btnXpMinus = document.querySelector('.btn-XP.minus')
+        const levelCircle = document.getElementById('level-circle');
+        const xpFill = document.getElementById('xp-fill');
+        const xpText = document.getElementById('xp-text');
         const classeSelect = document.getElementById('classe');
         const subclasseDiv = document.getElementById('subclasse-container');
         const subclasseSelect = document.getElementById('subclasse');
@@ -804,6 +922,31 @@
             atualizarEquipamentos();
             
             // Salvar automaticamente
+            salvarDados();
+        }
+
+        function configurarBotoesXP() {
+            btnXpPlus.addEventListener('click', () => {
+                xpInput.value = parseInt(xpInput.value) + 50;
+                atualizarNivelXP();
+            });
+
+            btnXpMinus.addEventListener('click', () => {
+                const newValue = Math.max(parseInt(xpInput.value) - 50, 0);
+                xpInput.value = newValue;
+                atualizarNivelXP();
+            });
+        }
+
+        function atualizarNivelXP() {
+            const xp = parseInt(xpInput.value) || 0;
+            const nivel = Math.floor(xp / 1000) + 1;
+            const xpProximoNivel = xp % 1000;
+            
+            document.getElementById('level-circle').textContent = nivel;
+            document.getElementById('xp-fill').style.width = `${(xpProximoNivel / 1000) * 100}%`;
+            document.getElementById('xp-text').textContent = `${xpProximoNivel}/1000 XP`;
+            
             salvarDados();
         }
 
@@ -932,7 +1075,9 @@
                 vidaMax: vidaMaxInput.value,
                 vidaAtual: vidaAtualInput.value,
                 escudoMax: escudoMaxInput.value,
-                escudoAtual: escudoAtualInput.value
+                escudoAtual: escudoAtualInput.value,
+                xp: xpInput.value,
+                nivel: document.getElementById('level-circle').textContent
             };
             
             localStorage.setItem('fichaNightfall', JSON.stringify(dados));
@@ -953,11 +1098,18 @@
             const dados = JSON.parse(localStorage.getItem('fichaNightfall'));
             const escudoMaxInput = document.getElementById('Shield-max');
             const escudoAtualInput = document.getElementById('escudo-atual');
+            const xpInput = document.getElementById('XP');
+            const levelCircle = document.getElementById('level-circle');
 
             if (dados) {
                 document.getElementById('nome').value = dados.nome || '';
                 classeSelect.value = dados.classe || 'humano';
                 document.getElementById('historia').value = dados.historia || '';
+
+                // NOVO: Carregar XP imediatamente
+                if (dados.xp) {
+                    xpInput.value = dados.xp;
+                }
                 
                 // Dar tempo para atualizar a classe antes de carregar subclasse
                 setTimeout(() => {
@@ -983,6 +1135,9 @@
                     escudoMaxInput.value = dados.escudoMax || 0;
                     escudoAtualInput.value = dados.escudoAtual || 0;
                     atualizarEscudo();
+
+                    // NOVO: Atualizar nível e XP após carregar tudo
+                    atualizarNivelXP();
  
 
                     
@@ -992,11 +1147,23 @@
                 
                 // Atualizar classe principal
                 atualizarClasse();
+
+                // NOVO: Carregar nível diretamente se existir
+                if (dados.nivel) {
+                    levelCircle.textContent = dados.nivel;
+                }
             } else {
                 // Inicializar com valores padrão
                 classeSelect.value = 'humano';
                 atualizarClasse();
+
+                 // NOVO: Inicializar XP/nível padrão
+                xpInput.value = 0;
+                atualizarNivelXP();
             }
+
+            // NOVO: Garantir atualização mesmo sem dados salvos
+            atualizarNivelXP();
         }
 
         // Rolar dado D20 com animação
@@ -1085,6 +1252,7 @@
         vidaAtualInput.addEventListener('input', atualizarVida);
         document.getElementById('Shield-max').addEventListener('input', atualizarEscudo);
         document.getElementById('escudo-atual').addEventListener('input', atualizarEscudo);
+        xpInput.addEventListener('input', atualizarNivelXP);
 
         
         // Validar valores mínimos nos inputs numéricos
@@ -1100,6 +1268,7 @@
         // Inicialização
         window.addEventListener('load', () => {
             configurarBotoesAtributo();
+            configurarBotoesXP(); 
             carregarDados();
         });
     </script>
